@@ -43,12 +43,17 @@ function withProvider(WrappedComponent) {
       this.setState({ route: [...this.state.route, { _id: generateUniqueId(), city }] })
     }
 
+    removeRouteNode = _id => {
+      this.setState({ route: this.state.route.filter(x => x._id !== _id) });
+    }
+
     render() {
       return (
         <Context.Provider value={{
           ...this.state,
           addRouteNode: this.addRouteNode,
           cities: this.getCities(this.state.graph),
+          removeRouteNode: this.removeRouteNode,
         }}>
           <WrappedComponent {...this.props} />
         </Context.Provider>
