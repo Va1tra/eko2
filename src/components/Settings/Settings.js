@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import Checkbox from 'components/Form/Checkbox';
 import Select from 'components/Form/Select';
 import memoize from 'memoize-one';
@@ -7,8 +8,13 @@ import React from 'react';
 class Settings extends React.PureComponent {
   static propTypes = {
     cities: PropTypes.arrayOf(PropTypes.string).isRequired,
+    className: PropTypes.string,
     onAddRouteNode: PropTypes.func.isRequired,
-    route: PropTypes.arrayOf({ city: PropTypes.string }).isRequired,
+    route: PropTypes.arrayOf(PropTypes.shape({ city: PropTypes.string })).isRequired,
+  }
+
+  static defaultProps = {
+    className: undefined,
   }
 
   getSelectOptions= memoize((cities, route) => {
@@ -20,12 +26,13 @@ class Settings extends React.PureComponent {
   render() {
     const {
       cities,
+      className,
       onAddRouteNode,
       route,
     } = this.props;
 
     return (
-      <div className="Settings">
+      <div className={cn('Settings', className)}>
         <Select
           onChangeValue={onAddRouteNode}
           options={this.getSelectOptions(cities, route)}
