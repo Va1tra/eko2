@@ -7,6 +7,13 @@ function compose(...args) {
   };
 }
 
+let uniqueId = 0;
+
+function generateUniqueId() {
+  return ++uniqueId;
+}
+
 export {
   compose,
+  generateUniqueId,
 }

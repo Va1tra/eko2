@@ -3,6 +3,7 @@ import { processing } from 'decorators'
 import memoize from 'memoize-one';
 import React from 'react';
 import withContext from './withContext';
+import { generateUniqueId } from 'utils/utils';
 
 const Context = React.createContext({});
 
@@ -13,6 +14,7 @@ function withProvider(WrappedComponent) {
     state = {
       graph: {},
       isLoading: true,
+      route: [],
     }
 
     componentDidMount = processing('isLoading')(async function() {
@@ -37,10 +39,15 @@ function withProvider(WrappedComponent) {
 
     getCities = memoize(graph => Object.keys(graph))
 
+    addRouteNode = city => {
+      this.setState({ route: [...this.state.route, { _id: generateUniqueId(), city }] })
+    }
+
     render() {
       return (
         <Context.Provider value={{
           ...this.state,
+          addRouteNode: this.addRouteNode,
           cities: this.getCities(this.state.graph),
         }}>
           <WrappedComponent {...this.props} />
@@ -52,6 +59,9 @@ function withProvider(WrappedComponent) {
   return ContextWrapper;
 }
 
+export {
+  withProvider,
+}
 export default {
   withProvider: Component => withProvider(Component),
   withContext: withContext(Context),
