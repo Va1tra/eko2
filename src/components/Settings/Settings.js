@@ -10,7 +10,11 @@ class Settings extends React.PureComponent {
     cities: PropTypes.arrayOf(PropTypes.string).isRequired,
     className: PropTypes.string,
     onAddRouteNode: PropTypes.func.isRequired,
+    onNoExtraStopsChange: PropTypes.func.isRequired,
     route: PropTypes.arrayOf(PropTypes.shape({ city: PropTypes.string })).isRequired,
+    settings: PropTypes.shape({
+      isNoExtraStops: PropTypes.bool,
+    }).isRequired,
   }
 
   static defaultProps = {
@@ -28,7 +32,9 @@ class Settings extends React.PureComponent {
       cities,
       className,
       onAddRouteNode,
+      onNoExtraStopsChange,
       route,
+      settings,
     } = this.props;
 
     return (
@@ -40,8 +46,10 @@ class Settings extends React.PureComponent {
         />
 
         <Checkbox
+          checked={settings.isNoExtraStops}
           className="mt-1"
           label="No extra stops"
+          onChangeValue={onNoExtraStopsChange}
         />
 
         <Checkbox

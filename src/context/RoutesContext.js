@@ -15,6 +15,9 @@ function withProvider(WrappedComponent) {
       graph: {},
       isLoading: true,
       route: [],
+      settings: {
+        isNoExtraStops: true,
+      }
     }
 
     componentDidMount = processing('isLoading')(async function() {
@@ -25,7 +28,7 @@ function withProvider(WrappedComponent) {
       routes.forEach(route => {
         const start = route[0];
         const end = route[1];
-        const cost = route.substring(2);
+        const cost = Number.parseInt(route.substring(2));
 
         if (!graph[start]) {
           graph[start] = [];
@@ -47,13 +50,58 @@ function withProvider(WrappedComponent) {
       this.setState({ route: this.state.route.filter(x => x._id !== _id) });
     }
 
+    setNoExtraStops = isNoExtraStops => {
+      this.setState({
+        settings: {
+          ...this.state.settings,
+          isNoExtraStops,
+        },
+      });
+    }
+
+    calculate = () => {
+      const { graph, route } = this.state;
+
+      const routeEdges = [];
+
+      for (let i = 0; i < route.length - 1; i++) {
+        routeEdges.push({ start: route[i].city, end: route[i + 1].city });
+      }
+
+      let cost = 0;
+
+      for (let i = 0; i < routeEdges.length; i++) {
+        const currentEdge = routeEdges[i];
+
+        const bestPath = graph[currentEdge.start]
+          .filter(graphEdge => graphEdge.end === currentEdge.end)
+          .sort((graphEdge1, graphEdge2) => graphEdge1.cost - graphEdge2.cost)[0];
+
+        if (bestPath) {
+          cost += bestPath.cost;
+        } else {
+          this.setState({ result: { isRouteFound: false } });
+          return;
+        }
+      }
+
+      this.setState({
+        result: {
+          cost,
+          isRouteFound: true,
+        }
+      });
+    }
+
     render() {
       return (
         <Context.Provider value={{
           ...this.state,
           addRouteNode: this.addRouteNode,
+          calculate: this.calculate,
           cities: this.getCities(this.state.graph),
           removeRouteNode: this.removeRouteNode,
+          setNoExtraStops: this.setNoExtraStops,
         }}>
           <WrappedComponent {...this.props} />
         </Context.Provider>
