@@ -198,4 +198,41 @@ describe('graphUtils', () => {
       })
     })
   });
+
+  describe('should find all paths with max weight restriction', () => {
+    const data = [
+      [
+        'case 1',
+        ['AB1', 'BC1', 'CD1', 'AD5'],
+        ['A', 'D', 5],
+        [
+          'AB1 -> BC1 -> CD1',
+          'AD5',
+        ],
+      ],
+      [
+        'case 2',
+        ['AB1', 'BC1', 'CD1', 'AD5'],
+        ['A', 'D', 4],
+        [
+          'AB1 -> BC1 -> CD1',
+        ],
+      ],
+      [
+        'case 3',
+        ['AB1', 'BC1', 'CD1', 'AD5'],
+        ['A', 'D', 1],
+        [],
+      ],
+    ];
+
+    data.forEach(([label, data, route, expected]) => {
+      test(label, () => {
+        const paths = getPaths(new Graph(data), route[0], route[1], undefined, route[2]);
+
+        expect(paths).toHaveLength(expected.length);
+        expect(paths.map(x => x.toString())).toEqual(expect.arrayContaining(expected));
+      })
+    })
+  });
 });

@@ -46,6 +46,10 @@ class Path {
     this.steps = [...steps];
   }
 
+  getWeight() {
+    return this.steps.reduce((total, nextStep) => total + nextStep, 0);
+  }
+
   addStep(step) {
     this.steps.push(step);
   }
@@ -116,8 +120,8 @@ function getPathWeight(path) {
   return path.reduce((weight, nextStep) => weight + nextStep.weight, 0);
 }
 
-function getPaths(graph, origin, destination, maxExtraStops = undefined, canUseStepTwice) {
-  function getNext(vertex, stops) {
+function getPaths(graph, origin, destination, maxExtraStops = undefined, maxPathWeight = undefined, canUseStepTwice = false ) {
+  function getNext(vertex, stops, weight) {
     if (!vertex || (typeof maxExtraStops === 'number' && maxExtraStops < stops)) {
       return null;
     }
@@ -125,12 +129,17 @@ function getPaths(graph, origin, destination, maxExtraStops = undefined, canUseS
     const paths = [];
 
     for (let i = 0; i < vertex.edges.length; i++) {
+
       const edge = vertex.edges[i];
+
+      if (typeof maxPathWeight === 'number' && (maxPathWeight < weight + edge.weight)) {
+        continue;
+      }
 
       if (edge.end === destination) {
         paths.push(new Path([edge]));
       } else {
-        const nextPaths = getNext(graph.getVertexById(edge.end), stops + 1);
+        const nextPaths = getNext(graph.getVertexById(edge.end), stops + 1, weight + edge.weight);
 
         if (nextPaths) {
           paths.push(...nextPaths.map(nextPath => new Path([edge]).combine(nextPath)));
@@ -145,7 +154,7 @@ function getPaths(graph, origin, destination, maxExtraStops = undefined, canUseS
     return paths;
   }
 
-  return getNext(graph.getVertexById(origin), 0) || [];
+  return getNext(graph.getVertexById(origin), 0, 0) || [];
 }
 
 export {
