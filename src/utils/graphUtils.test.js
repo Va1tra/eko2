@@ -235,4 +235,35 @@ describe('graphUtils', () => {
       })
     })
   });
+
+  describe('should find all paths with "can use step twice" restriction', () => {
+    const data = [
+      [
+        'case 1',
+        ['AB1', 'BC1', 'CB1', 'CD1', 'DA1'],
+        ['A', 'A', true],
+        [
+          'AB1 -> BC1 -> CD1 -> DA1',
+          'AB1 -> BC1 -> CB1 -> BC1 -> CD1 -> DA1',
+        ],
+      ],
+      [
+        'case 1',
+        ['AB1', 'BC1', 'CB1', 'CD1', 'DA1'],
+        ['A', 'A', false],
+        [
+          'AB1 -> BC1 -> CD1 -> DA1',
+        ],
+      ],
+    ];
+
+    data.forEach(([label, data, route, expected]) => {
+      test(label, () => {
+        const paths = getPaths(new Graph(data), route[0], route[1], undefined, undefined, route[2]);
+
+        expect(paths).toHaveLength(expected.length);
+        expect(paths.map(x => x.toString())).toEqual(expect.arrayContaining(expected));
+      })
+    })
+  });
 });

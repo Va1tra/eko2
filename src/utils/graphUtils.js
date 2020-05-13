@@ -50,9 +50,16 @@ class Path {
     return this.steps.reduce((total, nextStep) => total + nextStep, 0);
   }
 
+  getNumberOfTimesStepIsUsed(step) {
+    return this.steps.filter(x => x === step).length;
+  }
+
   addStep(step) {
     this.steps.push(step);
+
+    return this;
   }
+
 
   combine(path) {
     this.steps.push(...path.steps);
@@ -121,7 +128,7 @@ function getPathWeight(path) {
 }
 
 function getPaths(graph, origin, destination, maxExtraStops = undefined, maxPathWeight = undefined, canUseStepTwice = false ) {
-  function getNext(vertex, stops, weight) {
+  function getNext(vertex, stops, weight, prevPath) {
     if (!vertex || (typeof maxExtraStops === 'number' && maxExtraStops < stops)) {
       return null;
     }
@@ -132,6 +139,14 @@ function getPaths(graph, origin, destination, maxExtraStops = undefined, maxPath
 
       const edge = vertex.edges[i];
 
+      if (canUseStepTwice) {
+        if (prevPath.getNumberOfTimesStepIsUsed(edge) >= 2) {
+          continue
+        }
+      } else if (prevPath.getNumberOfTimesStepIsUsed(edge) >= 1) {
+        continue;
+      }
+
       if (typeof maxPathWeight === 'number' && (maxPathWeight < weight + edge.weight)) {
         continue;
       }
@@ -139,7 +154,12 @@ function getPaths(graph, origin, destination, maxExtraStops = undefined, maxPath
       if (edge.end === destination) {
         paths.push(new Path([edge]));
       } else {
-        const nextPaths = getNext(graph.getVertexById(edge.end), stops + 1, weight + edge.weight);
+        const nextPaths = getNext(
+          graph.getVertexById(edge.end),
+          stops + 1,
+          weight + edge.weight,
+          prevPath.clone().addStep(edge),
+        );
 
         if (nextPaths) {
           paths.push(...nextPaths.map(nextPath => new Path([edge]).combine(nextPath)));
@@ -154,7 +174,7 @@ function getPaths(graph, origin, destination, maxExtraStops = undefined, maxPath
     return paths;
   }
 
-  return getNext(graph.getVertexById(origin), 0, 0) || [];
+  return getNext(graph.getVertexById(origin), 0, 0, new Path()) || [];
 }
 
 export {
