@@ -127,9 +127,9 @@ function getPathWeight(path) {
   return path.reduce((weight, nextStep) => weight + nextStep.weight, 0);
 }
 
-function getPaths(graph, origin, destination, maxExtraStops = undefined, maxPathWeight = undefined, canUseStepTwice = false ) {
+function getPaths(graph, origin, destination, maxExtraStops = Number.POSITIVE_INFINITY, maxPathWeight = Number.POSITIVE_INFINITY, canUseStepTwice = false ) {
   function getNext(vertex, stops, weight, prevPath) {
-    if (!vertex || (typeof maxExtraStops === 'number' && maxExtraStops < stops)) {
+    if (!vertex || maxExtraStops < stops) {
       return null;
     }
 
@@ -147,7 +147,7 @@ function getPaths(graph, origin, destination, maxExtraStops = undefined, maxPath
         continue;
       }
 
-      if (typeof maxPathWeight === 'number' && (maxPathWeight < weight + edge.weight)) {
+      if (maxPathWeight < weight + edge.weight) {
         continue;
       }
 
