@@ -2,8 +2,9 @@ import { getRoutes } from 'api/routes';
 import { processing } from 'decorators'
 import memoize from 'memoize-one';
 import React from 'react';
-import withContext from './withContext';
+import { getPathWeight, getShortestStrictPath } from 'utils/graphUtils';
 import { generateUniqueId } from 'utils/utils';
+import withContext from './withContext';
 
 const Context = React.createContext({});
 
@@ -28,13 +29,13 @@ function withProvider(WrappedComponent) {
       routes.forEach(route => {
         const start = route[0];
         const end = route[1];
-        const cost = Number.parseInt(route.substring(2));
+        const weight = Number.parseInt(route.substring(2));
 
         if (!graph[start]) {
           graph[start] = [];
         }
 
-        graph[start].push({ _id: ++edgeCount, start, end, cost });
+        graph[start].push({ _id: ++edgeCount, start, end, weight });
       });
 
       this.setState({ graph });
@@ -60,37 +61,25 @@ function withProvider(WrappedComponent) {
     }
 
     calculate = () => {
-      const { graph, route } = this.state;
+      const {
+        graph,
+        route,
+        settings,
+      } = this.state;
 
-      const routeEdges = [];
+      if (settings.isNoExtraStops) {
+        const path = getShortestStrictPath(graph, route.map(x => x.city));
 
-      for (let i = 0; i < route.length - 1; i++) {
-        routeEdges.push({ start: route[i].city, end: route[i + 1].city });
-      }
-
-      let cost = 0;
-
-      for (let i = 0; i < routeEdges.length; i++) {
-        const currentEdge = routeEdges[i];
-
-        const bestPath = graph[currentEdge.start]
-          .filter(graphEdge => graphEdge.end === currentEdge.end)
-          .sort((graphEdge1, graphEdge2) => graphEdge1.cost - graphEdge2.cost)[0];
-
-        if (bestPath) {
-          cost += bestPath.cost;
+        if (path) {
+          this.setState({
+            result: { isPathFound: true, pathWeight: getPathWeight(path) },
+          });
         } else {
-          this.setState({ result: { isRouteFound: false } });
-          return;
+          this.setState({
+            result: { isPathFound: false }
+          });
         }
       }
-
-      this.setState({
-        result: {
-          cost,
-          isRouteFound: true,
-        }
-      });
     }
 
     render() {

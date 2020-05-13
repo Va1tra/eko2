@@ -5,8 +5,8 @@ function ResultVisualiser({ className = undefined, result }) {
   if (result) {
     return (
       <div className={cn('ResultVisualiser', className)}>
-        {result.isRouteFound
-          ? `cost: ${result.cost}`
+        {result.isPathFound
+          ? `cost: ${result.pathWeight}`
           : 'No Such Route'
         }
       </div>
