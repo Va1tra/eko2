@@ -18,6 +18,10 @@ class Graph {
   getVertexById(id) {
     return this.vertices[id];
   }
+
+  getVerticesIds() {
+    return Object.keys(this.vertices);
+  }
 }
 
 class Vertex {
@@ -78,29 +82,8 @@ class Path {
   }
 }
 
-
-let edgeCount = 0;
-
-function createGraph(data) {
-  const graph = {};
-
-  data.forEach(route => {
-    const start = route[0];
-    const end = route[1];
-    const weight = Number.parseInt(route.substring(2));
-
-    if (!graph[start]) {
-      graph[start] = [];
-    }
-
-    graph[start].push({ _id: ++edgeCount, start, end, weight });
-  });
-
-  return graph;
-}
-
 function getShortestStrictPath(graph, cities) {
-  const path = [];
+  const path = new Path();
 
   let start = cities[0];
   let end = cities[0];
@@ -109,22 +92,24 @@ function getShortestStrictPath(graph, cities) {
     start = end;
     end = cities[i];
 
-    const shortestStep = graph[start]
+    const vertex = graph.getVertexById(start);
+
+    if (!vertex) {
+      return null;
+    }
+
+    const shortestStep = vertex.edges
       .filter(edge => edge.end === end)
       .sort((edge1, edge2) => edge1.weight - edge2.weight)[0];
 
     if (shortestStep) {
-      path.push(shortestStep);
+      path.addStep(shortestStep);
     } else {
        return null;
     }
   }
 
   return path;
-}
-
-function getPathWeight(path) {
-  return path.reduce((weight, nextStep) => weight + nextStep.weight, 0);
 }
 
 function getPaths(graph, origin, destination, maxExtraStops = Number.POSITIVE_INFINITY, maxPathWeight = Number.POSITIVE_INFINITY, canUseStepTwice = false ) {
@@ -179,8 +164,6 @@ function getPaths(graph, origin, destination, maxExtraStops = Number.POSITIVE_IN
 
 export {
   Graph,
-  createGraph,
-  getPathWeight,
-  getShortestStrictPath,
   getPaths,
+  getShortestStrictPath,
 }

@@ -2,18 +2,16 @@ import { getRoutes } from 'api/routes';
 import { processing } from 'decorators'
 import memoize from 'memoize-one';
 import React from 'react';
-import { getPathWeight, getShortestStrictPath } from 'utils/graphUtils';
+import { getShortestStrictPath, Graph } from 'utils/graphUtils';
 import { generateUniqueId } from 'utils/utils';
 import withContext from './withContext';
 
 const Context = React.createContext({});
 
-let edgeCount = 0;
-
 function withProvider(WrappedComponent) {
   class ContextWrapper extends React.PureComponent {
     state = {
-      graph: {},
+      graph: new Graph([]),
       isLoading: true,
       route: [],
       settings: {
@@ -22,26 +20,12 @@ function withProvider(WrappedComponent) {
     }
 
     componentDidMount = processing('isLoading')(async function() {
-      const routes = await getRoutes();
+      const data = await getRoutes();
 
-      const graph = {};
-
-      routes.forEach(route => {
-        const start = route[0];
-        const end = route[1];
-        const weight = Number.parseInt(route.substring(2));
-
-        if (!graph[start]) {
-          graph[start] = [];
-        }
-
-        graph[start].push({ _id: ++edgeCount, start, end, weight });
-      });
-
-      this.setState({ graph });
+      this.setState({ graph: new Graph(data) });
     });
 
-    getCities = memoize(graph => Object.keys(graph))
+    getCities = memoize(graph => graph.getVerticesIds())
 
     addRouteNode = city => {
       this.setState({ route: [...this.state.route, { _id: generateUniqueId(), city }] })
@@ -72,7 +56,7 @@ function withProvider(WrappedComponent) {
 
         if (path) {
           this.setState({
-            result: { isPathFound: true, pathWeight: getPathWeight(path) },
+            result: { isPathFound: true, pathWeight: path.getWeight() },
           });
         } else {
           this.setState({

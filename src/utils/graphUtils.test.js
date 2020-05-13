@@ -1,4 +1,4 @@
-import { createGraph, getShortestStrictPath, getPaths, Graph } from './graphUtils';
+import { getPaths, getShortestStrictPath, Graph } from './graphUtils';
 
 describe('graphUtils', () => {
   describe('should find shortest strict path', () => {
@@ -7,27 +7,23 @@ describe('graphUtils', () => {
         'case 1',
         ['AB1', 'AB2', 'AB3'],
         ['A', 'B'],
-        [{ start: 'A', end: 'B', weight: 1}],
+        'AB1',
       ],
       [
         'case 2',
         ['AB1', 'AB2', 'AB3', 'BD4', 'BD2'],
         ['A', 'B', 'D'],
-        [{ start: 'A', end: 'B', weight: 1}, { start: 'B', end: 'D', weight: 2}],
+        'AB1 -> BD2',
       ]
     ];
 
-    data.forEach(([label, edges, route, expected]) => {
+    data.forEach(([label, data, cities, expected]) => {
       test(label, () => {
-        const path = getShortestStrictPath(createGraph(edges), route);
+        const path = getShortestStrictPath(new Graph(data), cities);
 
-        expect(path).toHaveLength(expected.length);
-
-        for (let i = 0; i < path.length; i++) {
-          expect(path[i]).toMatchObject(expected[i]);
-        }
+        expect(path.toString()).toEqual(expected);
       })
-    })
+    });
   });
 
   describe('should not find shortest strict path', () => {
@@ -44,9 +40,9 @@ describe('graphUtils', () => {
       ]
     ];
 
-    data.forEach(([label, edges, route]) => {
+    data.forEach(([label, data, cities]) => {
       test(label, () => {
-        const path = getShortestStrictPath(createGraph(edges), route);
+        const path = getShortestStrictPath(new Graph(data), cities);
 
         expect(path).toBeNull();
       })
