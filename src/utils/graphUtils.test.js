@@ -90,6 +90,7 @@ describe('graphUtils', () => {
       test(label, () => {
         const paths = getPaths(new Graph(data), route[0], route[1]);
 
+        expect(paths).toHaveLength(expected.length);
         expect(paths.map(x => x.toString())).toEqual(expect.arrayContaining(expected));
       })
     })
@@ -122,4 +123,45 @@ describe('graphUtils', () => {
       })
     })
   });
+
+  describe('should find all paths with maxExtraStops restriction', () => {
+    const data = [
+      [
+        'case 1',
+        ['AB1', 'BC1', 'CD1', 'DE1', 'BE2', 'AE4'],
+        ['A', 'E', 3],
+        [
+          'AE4',
+          'AB1 -> BE2',
+          'AB1 -> BC1 -> CD1 -> DE1',
+        ]
+      ],
+      [
+        'case 2',
+        ['AB1', 'BC1', 'CD1', 'DE1', 'BE2', 'AE4'],
+        ['A', 'E', 2],
+        [
+          'AE4',
+          'AB1 -> BE2',
+        ]
+      ],
+      [
+        'case 3',
+        ['AB1', 'BC1', 'CD1', 'DE1', 'BE2', 'AE4'],
+        ['A', 'E', 0],
+        [
+          'AE4',
+        ]
+      ],
+    ];
+
+    data.forEach(([label, data, route, expected]) => {
+      test(label, () => {
+        const paths = getPaths(new Graph(data), route[0], route[1], route[2]);
+
+        expect(paths).toHaveLength(expected.length);
+        expect(paths.map(x => x.toString())).toEqual(expect.arrayContaining(expected));
+      })
+    })
+  })
 });
