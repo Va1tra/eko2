@@ -163,5 +163,39 @@ describe('graphUtils', () => {
         expect(paths.map(x => x.toString())).toEqual(expect.arrayContaining(expected));
       })
     })
-  })
+  });
+
+  describe('should find all paths', () => {
+    const data = [
+      [
+        'case 1',
+        ['AB1', 'AB2', 'BC1', 'CA1'],
+        ['A', 'A'],
+        [
+          'AB1 -> BC1 -> CA1',
+          'AB2 -> BC1 -> CA1',
+        ]
+      ],
+      [
+        'case 2',
+        ['AB1', 'AB2', 'BC1', 'CD1', 'CD2', 'DA1'],
+        ['A', 'A'],
+        [
+          'AB1 -> BC1 -> CD1 -> DA1',
+          'AB2 -> BC1 -> CD1 -> DA1',
+          'AB1 -> BC1 -> CD2 -> DA1',
+          'AB2 -> BC1 -> CD2 -> DA1',
+        ]
+      ],
+    ];
+
+    data.forEach(([label, data, route, expected]) => {
+      test(label, () => {
+        const paths = getPaths(new Graph(data), route[0], route[1]);
+
+        expect(paths).toHaveLength(expected.length);
+        expect(paths.map(x => x.toString())).toEqual(expect.arrayContaining(expected));
+      })
+    })
+  });
 });
