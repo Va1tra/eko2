@@ -165,7 +165,7 @@ describe('graphUtils', () => {
     })
   });
 
-  describe('should find all paths', () => {
+  describe('should find cycle paths', () => {
     const data = [
       [
         'case 1',
