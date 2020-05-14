@@ -49,29 +49,34 @@ class Settings extends React.PureComponent {
       settings,
     } = this.props;
 
+    const options = this.getSelectOptions(cities, route);
+
     return (
       <div className={cn('Settings', className)}>
         <Select
           onChangeValue={onAddRouteNode}
-          options={this.getSelectOptions(cities, route)}
-          placeholder="Select next city in a route"
+          options={options}
+          placeholder={options.length > 0
+            ? 'Select next city in a route'
+            : 'All cities are selected'
+          }
           selectedValue={-1}
         />
 
-        <div className="Settings-searchTypes mt-3">
-          <Radio
-            checked={settings.searchType === SearchTypeEnum.SHORTEST_STRICT_PATH}
-            onChangeValue={onSearchTypeChange}
-            label="Find shortest strict route"
-            value={SearchTypeEnum.SHORTEST_STRICT_PATH}
-          />
-          <Radio
-            checked={settings.searchType === SearchTypeEnum.ALL_PATHS}
-            onChangeValue={onSearchTypeChange}
-            label="Find all routes (choose only origin and destination)"
-            value={SearchTypeEnum.ALL_PATHS}
-          />
-        </div>
+        <Radio
+          checked={settings.searchType === SearchTypeEnum.SHORTEST_STRICT_PATH}
+          className="mt-2"
+          onChangeValue={onSearchTypeChange}
+          label="Find shortest strict route"
+          value={SearchTypeEnum.SHORTEST_STRICT_PATH}
+        />
+        <Radio
+          checked={settings.searchType === SearchTypeEnum.ALL_PATHS}
+          className="mt-2"
+          onChangeValue={onSearchTypeChange}
+          label="Find all routes (choose only origin and destination)"
+          value={SearchTypeEnum.ALL_PATHS}
+        />
 
         {settings.searchType === SearchTypeEnum.ALL_PATHS && (
           <React.Fragment>

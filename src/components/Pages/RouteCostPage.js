@@ -31,7 +31,11 @@ function RouteCostPage(props) {
         settings={props.settings}
       />
 
-      <Button className="mt-3" onClick={props.calculate}>
+      <Button
+        className="mt-3"
+        disabled={props.route.length < 2}
+        onClick={props.calculate}
+      >
         Calculate
       </Button>
 
