@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function Select({ onChange, onChangeValue, options, selectedValue }) {
+function Select({ onChange, onChangeValue, options, placeholder, selectedValue }) {
   return (
     <select
       className="custom-select"
@@ -16,9 +16,12 @@ function Select({ onChange, onChangeValue, options, selectedValue }) {
       }}
       value={selectedValue}
     >
-      <option style={{ display: 'none' }}>
-        Select next city
-      </option>
+      {placeholder && (
+        <option style={{ display: 'none' }}>
+          {placeholder}
+        </option>
+      )}
+
       {options.map(({ label, value }) => (
         <option
           key={value}

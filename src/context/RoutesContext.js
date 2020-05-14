@@ -1,8 +1,9 @@
 import { getRoutes } from 'api/routes';
+import SearchTypeEnum from 'components/Settings/SearchTypeEnum';
 import { processing } from 'decorators'
 import memoize from 'memoize-one';
 import React from 'react';
-import { getShortestStrictPath, Graph } from 'utils/graphUtils';
+import { getPaths, getShortestStrictPath, Graph } from 'utils/graphUtils';
 import { generateUniqueId } from 'utils/utils';
 import withContext from './withContext';
 
@@ -15,7 +16,10 @@ function withProvider(WrappedComponent) {
       isLoading: true,
       route: [],
       settings: {
-        isNoExtraStops: true,
+        canUseStepTwice: false,
+        maxPathWeight: undefined,
+        maxStops: undefined,
+        searchType: SearchTypeEnum.SHORTEST_STRICT_PATH,
       }
     }
 
@@ -35,13 +39,40 @@ function withProvider(WrappedComponent) {
       this.setState({ route: this.state.route.filter(x => x._id !== _id) });
     }
 
-    setNoExtraStops = isNoExtraStops => {
+    setSearchType = searchType => {
       this.setState({
         settings: {
           ...this.state.settings,
-          isNoExtraStops,
+          searchType,
         },
       });
+    }
+
+    setMaxPathWeight = value => {
+      this.setState({
+        settings: {
+          ...this.state.settings,
+          maxPathWeight: value === '' ? undefined : Number.parseInt(value),
+        },
+      })
+    }
+
+    setMaxStops = value => {
+      this.setState({
+        settings: {
+          ...this.state.settings,
+          maxStops: value === '' ? undefined : Number.parseInt(value),
+        },
+      })
+    }
+
+    setUseStepTwice = canUseStepTwice => {
+      this.setState({
+        settings: {
+          ...this.state.settings,
+          canUseStepTwice,
+        },
+      })
     }
 
     calculate = () => {
@@ -51,7 +82,7 @@ function withProvider(WrappedComponent) {
         settings,
       } = this.state;
 
-      if (settings.isNoExtraStops) {
+      if (settings.searchType === SearchTypeEnum.SHORTEST_STRICT_PATH) {
         const path = getShortestStrictPath(graph, route.map(x => x.city));
 
         if (path) {
@@ -63,6 +94,19 @@ function withProvider(WrappedComponent) {
             result: { isPathFound: false }
           });
         }
+      } else {
+        const paths = getPaths(
+          graph,
+          route[0],
+          route[1],
+          settings.maxStops,
+          settings.maxPathWeight,
+          settings.canUseStepTwice,
+        );
+
+        this.setState({
+          result: { count: paths.length },
+        })
       }
     }
 
@@ -74,7 +118,10 @@ function withProvider(WrappedComponent) {
           calculate: this.calculate,
           cities: this.getCities(this.state.graph),
           removeRouteNode: this.removeRouteNode,
-          setNoExtraStops: this.setNoExtraStops,
+          setMaxPathWeight: this.setMaxPathWeight,
+          setMaxStops: this.setMaxStops,
+          setSearchType: this.setSearchType,
+          setUseStepTwice: this.setUseStepTwice,
         }}>
           <WrappedComponent {...this.props} />
         </Context.Provider>

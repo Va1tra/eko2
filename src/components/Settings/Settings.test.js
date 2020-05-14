@@ -8,6 +8,7 @@ describe('Settings', () => {
     const props = {
       cities: ['A', 'B'],
       route: [{ _id: 1, city: 'A' }],
+      settings: {},
     };
     const wrapper = shallow(<Settings {...props} />);
 
