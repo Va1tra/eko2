@@ -32,7 +32,7 @@ class Settings extends React.PureComponent {
 
   getSelectOptions= memoize((cities, route) => {
     return cities
-      .filter(city => !route.some(route => route.city === city))
+      // .filter(city => !route.some(route => route.city === city))
       .map(city => ({ label: city, value: city}));
   })
 
