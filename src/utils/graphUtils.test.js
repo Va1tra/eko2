@@ -125,7 +125,7 @@ describe('graphUtils', () => {
       [
         'case 1',
         ['AB1', 'BC1', 'CD1', 'DE1', 'BE2', 'AE4'],
-        ['A', 'E', 3],
+        ['A', 'E', 4],
         [
           'AE4',
           'AB1 -> BE2',
@@ -135,7 +135,7 @@ describe('graphUtils', () => {
       [
         'case 2',
         ['AB1', 'BC1', 'CD1', 'DE1', 'BE2', 'AE4'],
-        ['A', 'E', 2],
+        ['A', 'E', 3],
         [
           'AE4',
           'AB1 -> BE2',
@@ -144,7 +144,7 @@ describe('graphUtils', () => {
       [
         'case 3',
         ['AB1', 'BC1', 'CD1', 'DE1', 'BE2', 'AE4'],
-        ['A', 'E', 0],
+        ['A', 'E', 1],
         [
           'AE4',
         ]
