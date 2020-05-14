@@ -5,6 +5,7 @@ import Spinner from 'components/Spinner/Spinner';
 import RoutesContext from 'context/RoutesContext';
 import React from 'react';
 import { compose } from 'utils/utils';
+import ResultVisualiser from 'components/ResultVisualiser/ResultVisualiser';
 
 function RouteCostPage(props) {
   if (props.isLoading) {
@@ -33,6 +34,14 @@ function RouteCostPage(props) {
       <Button className="mt-3" onClick={props.calculate}>
         Calculate
       </Button>
+
+      {props.result && (
+        <ResultVisualiser
+          className="mt-4"
+          result={props.result}
+          searchType={props.settings.searchType}
+        />
+      )}
     </React.Fragment>
   )
 }

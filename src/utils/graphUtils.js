@@ -51,7 +51,7 @@ class Path {
   }
 
   getWeight() {
-    return this.steps.reduce((total, nextStep) => total + nextStep, 0);
+    return this.steps.reduce((total, nextStep) => total + nextStep.weight, 0);
   }
 
   getNumberOfTimesStepIsUsed(step) {

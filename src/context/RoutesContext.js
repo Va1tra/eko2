@@ -14,13 +14,14 @@ function withProvider(WrappedComponent) {
     state = {
       graph: new Graph([]),
       isLoading: true,
+      result: undefined,
       route: [],
       settings: {
         canUseStepTwice: false,
         maxPathWeight: undefined,
         maxStops: undefined,
         searchType: SearchTypeEnum.SHORTEST_STRICT_PATH,
-      }
+      },
     }
 
     componentDidMount = processing('isLoading')(async function() {
@@ -32,15 +33,22 @@ function withProvider(WrappedComponent) {
     getCities = memoize(graph => graph.getVerticesIds())
 
     addRouteNode = city => {
-      this.setState({ route: [...this.state.route, { _id: generateUniqueId(), city }] })
+      this.setState({
+        result: undefined,
+        route: [...this.state.route, { _id: generateUniqueId(), city }],
+      })
     }
 
     removeRouteNode = _id => {
-      this.setState({ route: this.state.route.filter(x => x._id !== _id) });
+      this.setState({
+        result: undefined,
+        route: this.state.route.filter(x => x._id !== _id),
+      });
     }
 
     setSearchType = searchType => {
       this.setState({
+        result: undefined,
         settings: {
           ...this.state.settings,
           searchType,
@@ -50,6 +58,7 @@ function withProvider(WrappedComponent) {
 
     setMaxPathWeight = value => {
       this.setState({
+        result:undefined,
         settings: {
           ...this.state.settings,
           maxPathWeight: value === '' ? undefined : Number.parseInt(value),
@@ -59,6 +68,7 @@ function withProvider(WrappedComponent) {
 
     setMaxStops = value => {
       this.setState({
+        result: undefined,
         settings: {
           ...this.state.settings,
           maxStops: value === '' ? undefined : Number.parseInt(value),
@@ -68,6 +78,7 @@ function withProvider(WrappedComponent) {
 
     setUseStepTwice = canUseStepTwice => {
       this.setState({
+        result: undefined,
         settings: {
           ...this.state.settings,
           canUseStepTwice,
