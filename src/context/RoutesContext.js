@@ -97,6 +97,8 @@ function withProvider(WrappedComponent) {
         const path = getShortestStrictPath(graph, route.map(x => x.city));
 
         if (path) {
+          console.info(path.toString());
+
           this.setState({
             result: { isPathFound: true, pathWeight: path.getWeight() },
           });
@@ -114,6 +116,8 @@ function withProvider(WrappedComponent) {
           settings.maxPathWeight,
           settings.canUseStepTwice,
         );
+
+        console.info(paths.map(x => x.toString()));
 
         this.setState({
           result: { count: paths.length },
