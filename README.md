@@ -1,68 +1,44 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Eko Delivery Service
+Eko decide to introduce new delivery services  to market in order to support growth of E-commerce business in Thailand. 
+Due to innovative nature of the company, the ways to use their service is very innovative one. 
+
+To use Eko Delivery Service, their customer s​​have to define delivery route by themselves.  They can construct it by 
+choosing multiple routes between two towns that Eko provided. 
+
+The delivery cost is equal to summation of these routes that they have chosen.
+
+Each routes in the list is only ‘one-way’, That is, a route from town A to town B does not imply the existence of a 
+route from town B to town A. Even if both of these routes do exist, they are distinct and are not necessarily have 
+same cost. 
+
+The purpose of this assignments is to help Eko building the system that provide their customers with 
+information about delivery route. You will compute delivery cost of the certain route and number of possible delivery 
+route​s between two towns.
+
+### Input Data
+A directed graph where a node represents a town and an edge represents a route between two towns. The weighting of the 
+edge represent the delivery cost between two towns. The towns are named using the first letters of the alphabet. 
+A route between two town A to town B with cost of 1 is represented as AB1
+
+Example:
+
+`AB1, AC4, AD10, BE3, CD4, CF2, DE1, EB3, EA2, FD1`
+
+## This data is mocked and stored in `src/api/mockData.json`
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `npm i`
+
+Install required packages
 
 ### `npm start`
 
 Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
