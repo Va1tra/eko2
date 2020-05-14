@@ -97,8 +97,8 @@ function withProvider(WrappedComponent) {
       } else {
         const paths = getPaths(
           graph,
-          route[0],
-          route[1],
+          route[0].city,
+          route[1].city,
           settings.maxStops,
           settings.maxPathWeight,
           settings.canUseStepTwice,
