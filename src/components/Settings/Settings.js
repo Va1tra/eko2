@@ -54,6 +54,7 @@ class Settings extends React.PureComponent {
     return (
       <div className={cn('Settings', className)}>
         <Select
+          disabled={settings.searchType === SearchTypeEnum.ALL_PATHS && route.length >= 2 }
           onChangeValue={onAddRouteNode}
           options={options}
           placeholder={options.length > 0

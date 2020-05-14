@@ -49,6 +49,7 @@ function withProvider(WrappedComponent) {
     setSearchType = searchType => {
       this.setState({
         result: undefined,
+        route: searchType === SearchTypeEnum.ALL_PATHS ? this.state.route.slice(0, 2) : this.state.route,
         settings: {
           ...this.state.settings,
           searchType,

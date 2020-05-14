@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function Select({ onChange, onChangeValue, options, placeholder, selectedValue }) {
+function Select({ disabled = false, onChange, onChangeValue, options, placeholder, selectedValue }) {
   return (
     <select
       className="custom-select"
+      disabled={disabled}
       onChange={event => {
         if (onChange) {
           onChange(event);
