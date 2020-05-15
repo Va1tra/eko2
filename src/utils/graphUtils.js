@@ -50,6 +50,10 @@ class Path {
     this.steps = [...steps];
   }
 
+  getStopsNumber() {
+    return this.steps.length;
+  }
+
   getWeight() {
     return this.steps.reduce((total, nextStep) => total + nextStep.weight, 0);
   }
@@ -113,8 +117,8 @@ function getShortestStrictPath(graph, cities) {
 }
 
 function getPaths(graph, origin, destination, maxStops = Number.POSITIVE_INFINITY, maxPathWeight = Number.POSITIVE_INFINITY, canUseStepTwice = false ) {
-  function getNext(vertex, stops, weight, prevPath) {
-    if (!vertex || maxStops < stops) {
+  function getNext(vertex, prevPath) {
+    if (!vertex || maxStops < prevPath.getStopsNumber() + 1) {
       return null;
     }
 
@@ -132,7 +136,7 @@ function getPaths(graph, origin, destination, maxStops = Number.POSITIVE_INFINIT
         continue;
       }
 
-      if (maxPathWeight < weight + edge.weight) {
+      if (maxPathWeight < prevPath.getWeight() + edge.weight) {
         continue;
       }
 
@@ -141,8 +145,6 @@ function getPaths(graph, origin, destination, maxStops = Number.POSITIVE_INFINIT
       } else {
         const nextPaths = getNext(
           graph.getVertexById(edge.end),
-          stops + 1,
-          weight + edge.weight,
           prevPath.clone().addStep(edge),
         );
 
@@ -159,7 +161,7 @@ function getPaths(graph, origin, destination, maxStops = Number.POSITIVE_INFINIT
     return paths;
   }
 
-  return getNext(graph.getVertexById(origin), 1, 0, new Path()) || [];
+  return getNext(graph.getVertexById(origin), new Path()) || [];
 }
 
 export {
