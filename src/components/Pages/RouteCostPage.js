@@ -52,19 +52,6 @@ function RouteCostPage(props) {
 
 export default compose(
   RoutesContext.withProvider,
-  RoutesContext.withContext([
-    'addRouteNode',
-    'calculate',
-    'cities',
-    'isLoading',
-    'removeRouteNode',
-    'result',
-    'route',
-    'settings',
-    'setMaxPathWeight',
-    'setMaxStops',
-    'setSearchType',
-    'setUseStepTwice',
-  ]),
+  RoutesContext.withContext(),
   React.memo
 )(RouteCostPage);

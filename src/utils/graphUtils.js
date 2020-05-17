@@ -119,13 +119,12 @@ function getShortestStrictPath(graph, cities) {
 function getPaths(graph, origin, destination, maxStops = Number.POSITIVE_INFINITY, maxPathWeight = Number.POSITIVE_INFINITY, canUseStepTwice = false ) {
   function getNext(vertex, prevPath) {
     if (!vertex || maxStops < prevPath.getStopsNumber() + 1) {
-      return null;
+      return [];
     }
 
     const paths = [];
 
     for (let i = 0; i < vertex.edges.length; i++) {
-
       const edge = vertex.edges[i];
 
       if (canUseStepTwice) {
@@ -141,27 +140,21 @@ function getPaths(graph, origin, destination, maxStops = Number.POSITIVE_INFINIT
       }
 
       if (edge.end === destination) {
-        paths.push(new Path([edge]));
+        paths.push(prevPath.clone().addStep(edge));
       } else {
         const nextPaths = getNext(
           graph.getVertexById(edge.end),
           prevPath.clone().addStep(edge),
         );
 
-        if (nextPaths) {
-          paths.push(...nextPaths.map(nextPath => new Path([edge]).combine(nextPath)));
-        }
+        paths.push(...nextPaths);
       }
-    }
-
-    if (paths.length === 0) {
-      return null;
     }
 
     return paths;
   }
 
-  return getNext(graph.getVertexById(origin), new Path()) || [];
+  return getNext(graph.getVertexById(origin), new Path());
 }
 
 export {
